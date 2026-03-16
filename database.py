@@ -1,15 +1,15 @@
 # ============================================================
 # database.py — Local MongoDB Connection (MongoDB Compass)
-# ============================================================
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from contextlib import asynccontextmanager
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 # ── Configuration ─────────────────────────────────────────
-MONGO_URI = "mongodb://localhost:27017"   # Default MongoDB Compass URI
-DB_NAME   = "fuelguard"                   # Database name (auto-created)
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+DB_NAME   = os.getenv("DB_NAME",   "fuelguard")
 
 class Database:
     client: AsyncIOMotorClient = None

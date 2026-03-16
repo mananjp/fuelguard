@@ -1,0 +1,35 @@
+# ============================================================
+# FuelGuard — docker compose up -d
+# Starts: MongoDB 7 + FastAPI backend
+# API:    http://localhost:8000/docs
+# Mongo:  mongodb://localhost:27017 (connect via Compass)
+# ============================================================
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: fuelguard-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+  api:
+    build: .
+    container_name: fuelguard-api
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      DB_NAME: fuelguard
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+volumes:
+  mongo_data:

@@ -27,6 +27,7 @@ from security import (
     GSTValidator, DriverBlacklist, CargoFuelAdjuster,
     NightCurfewChecker, EmergencySOS
 )
+from wallet_routes import wallet_router
 
 vision        = FuelVisionLLM()
 fraud         = FraudDetectionEngine()
@@ -60,6 +61,7 @@ app = FastAPI(
     description="Fuel Theft Prevention Platform — Full Build",
     lifespan=lifespan
 )
+app.include_router(wallet_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

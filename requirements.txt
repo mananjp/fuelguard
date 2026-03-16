@@ -45,3 +45,6 @@ google-generativeai
 # Dev and Testing
 pytest==8.3.5
 pytest-asyncio==0.25.3
+
+# Razorpay Payments & Payouts
+razorpay

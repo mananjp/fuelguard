@@ -1,0 +1,30 @@
+venv/
+.venv/
+.git/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test images (not needed in prod image)
+meter.jpg
+pump.jpg
+receipt.jpg
+
+# Docker / Git
+Dockerfile
+docker-compose.yml
+.dockerignore
+.gitignore
+LICENSE
+README.md

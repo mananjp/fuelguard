@@ -1,0 +1,15 @@
+fuelguard-api  | /usr/local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:275: FutureWarning: You are using a Python version (3.10.20) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+fuelguard-api  |   warnings.warn(message, FutureWarning)
+fuelguard-api  | /app/llm_vision.py:11: FutureWarning: 
+fuelguard-api  | 
+fuelguard-api  | All support for the `google.generativeai` package has ended. It will no longer be receiving 
+fuelguard-api  | updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+fuelguard-api  | See README for more details:
+fuelguard-api  | 
+fuelguard-api  | https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+fuelguard-api  | 
+fuelguard-api  |   import google.generativeai as genai
+fuelguard-api  | INFO:     Started server process [1]
+fuelguard-api  | INFO:     Waiting for application startup.
+fuelguard-api  | INFO:     Application startup complete.
+fuelguard-api  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
