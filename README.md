@@ -42,10 +42,12 @@ FuelGuard is a complete backend platform that uses Google Gemini (with Ollama LL
 - **Night Curfew Enforcement** — Flags high-risk late-night fueling
 - **Emergency SOS** — Driver safety alerts with Google Maps link
 
-### Payment Gateway
-- **Razorpay UPI Integration** — Create payment links, process webhooks
+### Payment & Wallet Infrastructure
+- **Trip Wallet System** — Digital wallet for drivers to manage trip expenses
+- **GPay-style Merchant Payouts** — Drivers can pay any UPI merchant directly from their wallet using RazorpayX Payouts
+- **RazorpayUPI Integration** — Create payment links for owners to load funds, process webhooks
 - **Per-Driver/Truck/Route Analytics** — All payments tagged and differentiable
-- **Driver Payment History** — Complete expense tracking
+- **Real-time Balance Returns** — Unused allocated funds are automatically returned to the owner when a trip closes
 
 ---
 
@@ -60,50 +62,48 @@ FuelGuard is a complete backend platform that uses Google Gemini (with Ollama LL
 | Dashboard | Streamlit |
 | Language | Python 3.10+ |
 
----
+## Quick Start (Docker - Recommended)
 
-## Quick Start
+The easiest way to run FuelGuard is using Docker. This spins up both the FastAPI backend and a MongoDB instance automatically.
 
-### 1. Clone and Install
+### 1. Clone and Configure
 ```bash
 git clone https://github.com/mananjp/fuelguard.git
 cd fuelguard
-python -m venv venv
-# Windows
-.\venv\Scripts\activate
-# macOS/Linux
-source venv/bin/activate
 
+# Copy the example environment file
+cp .env.example .env
+```
+*(Edit `.env` to add your Gemini and Razorpay API keys)*
+
+### 2. Start Services
+```bash
+docker compose up -d
+```
+The API is now live at: **[http://localhost:8000/docs](http://localhost:8000/docs)**
+
+
+## Manual Setup (Without Docker)
+
+If you prefer to run the app directly on your host machine:
+
+### 1. Install Dependencies
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
 ### 2. Configure Environment
-Create a `.env` file:
-```env
-# MongoDB
-MONGO_URI=mongodb://localhost:27017
-DB_NAME=fuelguard
+Create a `.env` file with your `MONGO_URI` (e.g., `mongodb://localhost:27017`), `DB_NAME`, `GEMINI_API_KEY`, and `RAZORPAY_KEY` values.
 
-# Google Gemini (FREE — get key at https://aistudio.google.com/apikey)
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Razorpay (test keys from https://dashboard.razorpay.com)
-RAZORPAY_KEY_ID=rzp_test_XXXXXXXXXXXX
-RAZORPAY_KEY_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
-WEBHOOK_SECRET=your_webhook_secret_here
-```
-
-### 3. Start MongoDB
-Make sure MongoDB is running locally on port 27017. The app will auto-create the `fuelguard` database and seed demo data.
-
-### 4. Run the Backend
+### 3. Run the Backend
+Ensure MongoDB is running locally, then:
 ```bash
 uvicorn main:app --reload --port 8000
 ```
-- API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-- Health Check: [http://localhost:8000/health](http://localhost:8000/health)
 
-### 5. Run the Dashboards (Optional)
+### 4. Run the Dashboards (Optional)
 ```bash
 # Driver Upload UI
 streamlit run driver_upload_app.py --server.port 8503
@@ -125,7 +125,7 @@ streamlit run dashboard.py --server.port 8502
 | **Drivers** | `GET /drivers`, `GET /drivers/{id}` |
 | **Trips** | `POST /trip/start`, `POST /trip/{id}/end` |
 | **GPS** | `POST /gps/update` — Real-time tracking + deviation alerts |
-| **Payments** | `POST /payments/create`, `POST /payments/webhook`, `GET /payments/analytics` |
+| **Wallet & Payments**| `POST /wallet/allocate`, `POST /wallet/pay-merchant`, `POST /wallet/owner/create-load-link` |
 | **Security** | `GET /security/gps-spoof/{id}`, `POST /security/sos`, `POST /security/otp/create`, etc. |
 | **Dashboard** | `GET /dashboard/fleet`, `GET /dashboard/analytics/{id}` |
 
@@ -137,18 +137,19 @@ Full interactive docs at `/docs` (Swagger UI).
 
 ```
 fuelguard/
-├── main.py                 # FastAPI app — all 34 endpoints
+├── main.py                 # FastAPI app — core endpoints
 ├── database.py             # MongoDB connection (Motor async)
 ├── llm_vision.py           # Gemini/Ollama receipt & meter reader
 ├── fraud_detection.py      # 12-rule fraud scoring engine
 ├── fuel_intelligence.py    # Route distance & consumption calculator
 ├── security.py             # 11 security features
-├── payment_gateway.py      # Razorpay UPI integration
-├── driver_upload_app.py    # Streamlit driver UI
-├── dashboard.py            # Streamlit fleet manager dashboard
+├── wallet.py               # Core wallet business logic
+├── wallet_routes.py        # Wallet API endpoints router
+├── gpay_payment.py         # RazorpayX Payouts integration
+├── Dockerfile              # Container definition
+├── docker-compose.yml      # Service orchestration (app + database)
 ├── requirements.txt        # Python dependencies
-├── .env                    # API keys (not committed)
-└── README.md
+└── .env.example            # Environment variables template
 ```
 
 ---
