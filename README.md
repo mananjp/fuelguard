@@ -214,3 +214,5 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ## Author
 
 **Manan Panchal** — [@mananjp](https://github.com/mananjp)
+**Tirth Bhanderi** — [@tirthbhanderi2006](https://github.com/tirthbhanderi2006)
+
